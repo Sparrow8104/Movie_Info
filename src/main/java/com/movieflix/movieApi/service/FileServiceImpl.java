@@ -13,20 +13,20 @@ public class FileServiceImpl implements FileService {
     @Override
     public String uploadFile(String path, MultipartFile file) throws IOException {
 
-        //get the name of the file
+
         String fileName=file.getOriginalFilename();
 
-        //to get the file path
+
         String filePath= path+ File.separator+fileName;
 
-        //create file object
+
         File f=new File(path);
 
         if(!f.exists()){
             f.mkdir();
         }
 
-        //copy the file or upload the file to the path
+
         Files.copy(file.getInputStream(), Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
         return fileName;
     }

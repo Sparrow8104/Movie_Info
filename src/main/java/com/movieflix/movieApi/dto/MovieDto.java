@@ -1,12 +1,11 @@
 package com.movieflix.movieApi.dto;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 import java.util.Set;
 
@@ -30,12 +29,12 @@ public class MovieDto {
 
     private Set<String> movieCast;
 
-    @Column(nullable = false)
     private Integer releaseYear;
 
     @NotBlank(message = "Please provide the movie's poster")
     private String poster;
 
-    @NotBlank(message = "Please provide the movie's poster")
+    @NotBlank(message = "Please provide the movie's posterUrl")
     private String posterUrl;
+
 }
