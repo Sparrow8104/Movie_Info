@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -72,7 +73,7 @@ public class MovieServiceImpl implements MovieService{
 
         String posterUrl=baseUrl+"/file/"+movie.getPoster();
 
-        MovieDto dto=new MovieDto(
+        MovieDto response=new MovieDto(
                 movie.getMovieId(),
                 movie.getTitle(),
                 movie.getDirector(),
@@ -82,11 +83,33 @@ public class MovieServiceImpl implements MovieService{
                 movie.getPoster(),
                 posterUrl
         );
-        return dto;
+        return response;
     }
 
     @Override
     public List<MovieDto> getAllMovies() {
-        return List.of();
+        //1.fetch all data from db
+        List<Movie> movies=movieRepository.findAll();
+
+        List<MovieDto> movieDtos=new ArrayList<>();
+
+        //2.Iterate through the list and generate poster url for each of them
+        //and map to movieDto object
+
+        for(Movie movie:movies){
+            String posterUrl=baseUrl+"/file/"+movie.getPoster();
+            MovieDto response=new MovieDto(
+                    movie.getMovieId(),
+                    movie.getTitle(),
+                    movie.getDirector(),
+                    movie.getStudio(),
+                    movie.getMovieCast(),
+                    movie.getReleaseYear(),
+                    movie.getPoster(),
+                    posterUrl
+            );
+            movieDtos.add(response);
+        }
+        return movieDtos;
     }
 }
