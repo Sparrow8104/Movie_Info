@@ -67,7 +67,22 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     public MovieDto getMovie(Integer movieId) {
-        return null;
+
+        Movie movie=movieRepository.findById(movieId).orElseThrow(()-> new RuntimeException("Movie not found"));
+
+        String posterUrl=baseUrl+"/file/"+movie.getPoster();
+
+        MovieDto dto=new MovieDto(
+                movie.getMovieId(),
+                movie.getTitle(),
+                movie.getDirector(),
+                movie.getStudio(),
+                movie.getMovieCast(),
+                movie.getReleaseYear(),
+                movie.getPoster(),
+                posterUrl
+        );
+        return dto;
     }
 
     @Override
