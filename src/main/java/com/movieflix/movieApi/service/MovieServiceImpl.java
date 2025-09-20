@@ -127,24 +127,24 @@ public class MovieServiceImpl implements MovieService{
         String fileName=mv.getPoster();
         if(file!=null){
             Files.delete(Paths.get(path+File.separator+fileName));
-            String filename=fileService.uploadFile(path,file);
+            fileName=fileService.uploadFile(path,file);
         }
 
         movieDto.setPoster(fileName);
 
         Movie movie=new Movie(
-                mv.getMovieId(),
-                mv.getTitle(),
-                mv.getDirector(),
-                mv.getStudio(),
-                mv.getMovieCast(),
-                mv.getReleaseYear(),
-                mv.getPoster()
+              movieDto.getMovieId(),
+                movieDto.getTitle(),
+                movieDto.getDirector(),
+                movieDto.getStudio(),
+                movieDto.getMovieCast(),
+                movieDto.getReleaseYear(),
+                movieDto.getPoster()
         );
 
         Movie savedMovie=movieRepository.save(movie);
 
-        String posterUrl=baseUrl+"/file"+fileName;
+        String posterUrl=baseUrl+"/file/"+fileName;
 
         MovieDto response=new MovieDto(
                 savedMovie.getMovieId(),
@@ -160,7 +160,16 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public String deleteMovie(Integer movieId) {
-        return null;
+    public String deleteMovie(Integer movieId) throws IOException {
+
+        Movie movie=movieRepository.findById(movieId).orElseThrow(
+                ()-> new RuntimeException("Movie not found"));
+
+
+        Files.delete(Paths.get(path+File.separator+movie.getPoster()));
+
+        movieRepository.delete(movie);
+
+        return "movie deleted successfully="+movieId;
     }
 }
