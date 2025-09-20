@@ -93,7 +93,7 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     public List<MovieDto> getAllMovies() {
-        //1.fetch all data from db
+
         List<Movie> movies=movieRepository.findAll();
 
         List<MovieDto> movieDtos=new ArrayList<>();
@@ -120,7 +120,43 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     public MovieDto updateMovie(Integer movieId,MovieDto movieDto, MultipartFile file) throws IOException {
-        return null;
+
+        Movie mv=movieRepository.findById(movieId).orElseThrow(
+                ()-> new RuntimeException("movie not found"));
+
+        String fileName=mv.getPoster();
+        if(file!=null){
+            Files.delete(Paths.get(path+File.separator+fileName));
+            String filename=fileService.uploadFile(path,file);
+        }
+
+        movieDto.setPoster(fileName);
+
+        Movie movie=new Movie(
+                mv.getMovieId(),
+                mv.getTitle(),
+                mv.getDirector(),
+                mv.getStudio(),
+                mv.getMovieCast(),
+                mv.getReleaseYear(),
+                mv.getPoster()
+        );
+
+        Movie savedMovie=movieRepository.save(movie);
+
+        String posterUrl=baseUrl+"/file"+fileName;
+
+        MovieDto response=new MovieDto(
+                savedMovie.getMovieId(),
+                savedMovie.getTitle(),
+                savedMovie.getDirector(),
+                savedMovie.getStudio(),
+                savedMovie.getMovieCast(),
+                savedMovie.getReleaseYear(),
+                savedMovie.getPoster(),
+                posterUrl
+        );
+        return response;
     }
 
     @Override
