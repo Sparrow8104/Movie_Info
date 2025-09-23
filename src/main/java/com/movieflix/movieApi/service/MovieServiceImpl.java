@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -208,6 +209,30 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     public MoviePageResponse getAllMoviesWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String dir) {
-        return null;
+
+        Sort sort=dir.equalsIgnoreCase("asc")?Sort.by(sortBy).ascending()
+                                                             :Sort.by(sortBy).descending();
+        Pageable pageable= PageRequest.of(pageNumber,pageSize,sort);
+        Page<Movie> moviePages=movieRepository.findAll(pageable);
+
+        List<Movie> movies=moviePages.getContent();
+
+        List<MovieDto> movieDtos=new ArrayList<>();
+        for(Movie movie:movies){
+            String posterUrl=baseUrl+"/file/"+movie.getPoster();
+            MovieDto response=new MovieDto(
+                    movie.getMovieId(),
+                    movie.getTitle(),
+                    movie.getDirector(),
+                    movie.getStudio(),
+                    movie.getMovieCast(),
+                    movie.getReleaseYear(),
+                    movie.getPoster(),
+                    posterUrl
+            );
+            movieDtos.add(response);
+        }
+        return new MoviePageResponse(movieDtos,pageNumber,pageSize,moviePages.getTotalElements(),
+                moviePages.getTotalPages(),moviePages.isLast());
     }
 }
