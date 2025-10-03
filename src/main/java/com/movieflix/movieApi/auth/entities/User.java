@@ -39,6 +39,7 @@ public class User implements UserDetails {
     @NotBlank(message = "The password field can't be blank")
     @Size(min=5,message = "The password must have at least 5 characters")
 
+    @OneToOne(mappedBy = "user")
     private RefreshToken refreshToken;
     private String password;
     @Enumerated(EnumType.STRING)
