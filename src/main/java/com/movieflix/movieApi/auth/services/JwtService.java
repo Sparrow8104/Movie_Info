@@ -24,7 +24,7 @@ public class JwtService {
 
     private final String SECRET_KEY="ThisIsASecretKeyForJWTsMustBeLongEnough123!";
 
-    private String extractUsername(String token){
+    public String extractUsername(String token){
         return extractAllClaims(token).getSubject();
     }
 
