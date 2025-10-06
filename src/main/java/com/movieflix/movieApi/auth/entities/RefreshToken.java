@@ -24,7 +24,7 @@ public class RefreshToken {
     private String refreshToken;
 
     @Column(nullable = false)
-    private Instant expiarationTime;
+    private Instant expirationTime;
 
     @OneToOne
     private User user;

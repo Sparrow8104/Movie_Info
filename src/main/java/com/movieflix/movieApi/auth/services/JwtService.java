@@ -59,10 +59,10 @@ public class JwtService {
     ){
     return Jwts.
             builder()
-            .setClaims(extraClaims)
+            .setClaims(extraClaims) //extraClaims is used so that we can dynamically add values to the payload
             .setSubject(userDetails.getUsername())
             .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis()+2000*60*24))
+            .setExpiration(new Date(System.currentTimeMillis()+25*1000))
             .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact();
     }
