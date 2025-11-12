@@ -22,7 +22,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private final String SECRET_KEY="ThisIsASecretKeyForJWTsMustBeLongEnough123!";
+    private final String SECRET_KEY="GJhD34Q8qA5YfLd7hjYb9r9VhI6nWl6Uw8cE3dZ8k6o=";
 
     public String extractUsername(String token){
         return extractAllClaims(token).getSubject();
@@ -62,7 +62,7 @@ public class JwtService {
             .setClaims(extraClaims) //extraClaims is used so that we can dynamically add values to the payload
             .setSubject(userDetails.getUsername())
             .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis()+25*1000))
+            .setExpiration(new Date(System.currentTimeMillis()+1000*60*15))
             .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact();
     }

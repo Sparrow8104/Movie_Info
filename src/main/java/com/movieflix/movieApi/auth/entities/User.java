@@ -43,16 +43,11 @@ public class User implements UserDetails {
     @Size(min=5,message = "The password must have at least 5 characters")
     private String password;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     private RefreshToken refreshToken;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
-
-    private boolean isEnabled=true;
-    private boolean isCredentialsNonExpired=true;
-    private boolean isAccountNonLocked=true;
-    private boolean isAccountNonExpired=true;
 
     @Override
     public String getPassword() {
@@ -71,21 +66,21 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return isAccountNonExpired;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return isAccountNonLocked;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return isCredentialsNonExpired;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return isEnabled;
+        return true;
     }
 }
