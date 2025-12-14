@@ -5,17 +5,18 @@ import com.movieflix.movieApi.auth.entities.User;
 import com.movieflix.movieApi.auth.repositories.ForgotPasswordRepository;
 import com.movieflix.movieApi.auth.repositories.UserRepository;
 import com.movieflix.movieApi.auth.services.EmailService;
+import com.movieflix.movieApi.auth.utils.ChangePassword;
 import com.movieflix.movieApi.dto.MailBody;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Random;
 
 @RestController
@@ -26,11 +27,13 @@ public class ForgotPasswordController {
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final ForgotPasswordRepository forgotPasswordRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public ForgotPasswordController(UserRepository userRepository, EmailService emailService, ForgotPasswordRepository forgotPasswordRepository) {
+    public ForgotPasswordController(UserRepository userRepository, EmailService emailService, ForgotPasswordRepository forgotPasswordRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.emailService = emailService;
         this.forgotPasswordRepository = forgotPasswordRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     //to verify emailId
@@ -76,6 +79,17 @@ public class ForgotPasswordController {
 
         return ResponseEntity.ok("Otp is verified");
 
+    }
+
+    @PostMapping("/changePassword/{email}")
+    private ResponseEntity<String> changePasswordHandler(@RequestBody ChangePassword changePassword,
+                                                         @PathVariable String email){
+        if(!Objects.equals(changePassword.password(),changePassword.repeatPassword())){
+            return new ResponseEntity<>("Please enter the password again",HttpStatus.EXPECTATION_FAILED);
+        }
+        String encodedPassword=passwordEncoder.encode(changePassword.password());
+        userRepository.updatePassword(email,encodedPassword);
+        return ResponseEntity.ok("Password has been changed");
     }
 
     private Integer otpGenerator(){
