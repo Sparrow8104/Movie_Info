@@ -20,8 +20,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ""
-    password: ""
+    username: "sparrow246@zohomail.in"
+    password: "QqsjTUML2hHi"
     properties:
       mail:
         smtp:

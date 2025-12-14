@@ -14,7 +14,7 @@ public class EmailService {
     public void sendSimpleMessage(MailBody mailBody){
         SimpleMailMessage message=new SimpleMailMessage();
         message.setTo(mailBody.to());
-        message.setFrom(" ");
+        message.setFrom("sparrow246@zohomail.in");
         message.setSubject(mailBody.subject());
         message.setText(mailBody.text());
 
